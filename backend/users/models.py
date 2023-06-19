@@ -1,20 +1,13 @@
-import uuid
+from django.db import models
 
+# Create your models here.
 from django.contrib.auth.models import AbstractUser
 from django.core.validators import RegexValidator
-from django.db import models
 
 
 class User(AbstractUser):
-    ADMIN = 'admin'
-    MODERATOR = 'moderator'
-    USER = 'user'
-    ROLES = [
-        (ADMIN, 'admin'),
-        (MODERATOR, 'moderator'),
-        (USER, 'user')
 
-    ]
+    email = models.EmailField(unique=True)
     username = models.CharField(
         max_length=150,
         unique=True,
@@ -28,18 +21,35 @@ class User(AbstractUser):
             ),
         ]
     )
-    email = models.EmailField(unique=True)
-    bio = models.TextField(
-        'Биография',
-        blank=True, null=True
+    first_name = models.CharField(
+        max_length=150,
+        unique=True,
+        validators=[
+            RegexValidator(
+                regex=r'^[\w.@+-]+\Z',
+                message=(
+                    'Required. 150 characters or fewer.'
+                    'Letters, digits and @/./+/-/_ only.'
+                ),
+            ),
+        ]
     )
-
-    role = models.CharField(
-        max_length=10,
-        choices=ROLES,
-        default=USER,
+    last_name = models.CharField(
+        max_length=150,
+        unique=True,
+        validators=[
+            RegexValidator(
+                regex=r'^[\w.@+-]+\Z',
+                message=(
+                    'Required. 150 characters or fewer.'
+                    'Letters, digits and @/./+/-/_ only.'
+                ),
+            ),
+        ]
     )
-    confirmation_code = models.TextField(default=uuid.uuid4)
 
     USERNAME_FIELD = 'email'
-    REQUIRED_FIELDS = ('username',)
+    REQUIRED_FIELDS = ('username', 'first_name', 'last_name')
+
+    def __str__(self):
+        return self.email

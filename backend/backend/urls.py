@@ -1,5 +1,5 @@
 from django.contrib import admin
-from django.urls import path
+from django.urls import path, include
 from django.views.generic import TemplateView
 
 urlpatterns = [
@@ -9,4 +9,6 @@ urlpatterns = [
         TemplateView.as_view(template_name='docs/redoc.html'),
         name='redoc'
     ),
+    path('api/', include('djoser.urls')),  # Работа с пользователями
+    path('api/', include('djoser.urls.authtoken')),  # Работа с токенами
 ]
