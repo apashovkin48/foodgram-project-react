@@ -9,6 +9,6 @@ urlpatterns = [
         TemplateView.as_view(template_name='docs/redoc.html'),
         name='redoc'
     ),
-    path('api/', include('djoser.urls')),  # Работа с пользователями
-    path('api/', include('djoser.urls.authtoken')),  # Работа с токенами
+    path('api/', include('djoser.urls')),
+    path('api/auth/', include('djoser.urls.authtoken')),
 ]

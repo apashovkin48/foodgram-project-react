@@ -1,0 +1,44 @@
+@users = http://127.0.0.1:8000/api/users/
+@user = http://127.0.0.1:8000/api/users/2/
+@get_token = http://127.0.0.1:8000/api/auth/token/login/
+@remove_token = http://127.0.0.1:8000/api/auth/token/logout/
+
+###
+POST {{ users }} HTTP/1.1
+Content-Type: application/json
+
+{
+  "email": "vpupkin1@yandex.ru",
+  "username": "vasya.pupkin1",
+  "first_name": "Вася1",
+  "last_name": "Пупкин1",
+  "password": "Qwerty123ewq321"
+}
+
+###
+POST {{ get_token }} HTTP/1.1
+Content-Type: application/json
+
+{
+    "password": "Qwerty123ewq321",
+    "email": "vpupkin@yandex.ru"
+}
+
+###
+POST {{ remove_token }} HTTP/1.1
+Content-Type: application/json
+authorization: Token 44184086db4ee6cc2e70c6efbae0e960dc2b0afe
+
+{
+
+}
+
+###
+GET {{ users }} HTTP/1.1
+content-type: application/json
+authorization: Token 44184086db4ee6cc2e70c6efbae0e960dc2b0afe
+
+###
+GET {{ user }} HTTP/1.1
+content-type: application/json
+authorization: Token 44184086db4ee6cc2e70c6efbae0e960dc2b0afe
