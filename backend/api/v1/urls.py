@@ -6,13 +6,18 @@ from rest_framework.routers import SimpleRouter
 router = SimpleRouter()
 router.register(
     r'tags',
-    views.TagView,
+    views.TagViewSet,
     basename='tags'
 )
 router.register(
     r'ingredients',
-    views.IngredientView,
+    views.IngredientViewSet,
     basename='ingredients'
+)
+router.register(
+    r'recipes',
+    views.RecipeViewSet,
+    basename='recipes'
 )
 
 
