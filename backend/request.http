@@ -21,7 +21,7 @@ Content-Type: application/json
 
 {
     "password": "Qwerty123ewq321",
-    "email": "vpupkin@yandex.ru"
+    "email": "vpupkin1@yandex.ru"
 }
 
 ###
@@ -36,9 +36,9 @@ authorization: Token 44184086db4ee6cc2e70c6efbae0e960dc2b0afe
 ###
 GET {{ users }} HTTP/1.1
 content-type: application/json
-authorization: Token 44184086db4ee6cc2e70c6efbae0e960dc2b0afe
+Authorization: Token 9d64e4c58e6da90a9adb729eb3a241a3c13f83be
 
 ###
 GET {{ user }} HTTP/1.1
 content-type: application/json
-authorization: Token 44184086db4ee6cc2e70c6efbae0e960dc2b0afe
+Authorization: Token 9d64e4c58e6da90a9adb729eb3a241a3c13f83be
