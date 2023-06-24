@@ -2,6 +2,10 @@
 @user = http://127.0.0.1:8000/api/users/2/
 @get_token = http://127.0.0.1:8000/api/auth/token/login/
 @remove_token = http://127.0.0.1:8000/api/auth/token/logout/
+@tags = http://127.0.0.1:8000/api/tags/
+@tag = http://127.0.0.1:8000/api/tags/1/
+@ingredients = http://127.0.0.1:8000/api/ingredients/
+@ingredient = http://127.0.0.1:8000/api/ingredients/1/
 
 ###
 POST {{ users }} HTTP/1.1
@@ -42,3 +46,19 @@ Authorization: Token 9d64e4c58e6da90a9adb729eb3a241a3c13f83be
 GET {{ user }} HTTP/1.1
 content-type: application/json
 Authorization: Token 9d64e4c58e6da90a9adb729eb3a241a3c13f83be
+
+###
+GET {{tag}} HTTP/1.1
+Content-Type: application/json
+
+###
+GET {{tags}} HTTP/1.1
+Content-Type: application/json
+
+###
+GET {{ingredient}} HTTP/1.1
+Content-Type: application/json
+
+###
+GET {{ingredients}} HTTP/1.1
+Content-Type: application/json
