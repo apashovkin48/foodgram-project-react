@@ -99,6 +99,7 @@ class Recipe(models.Model):
     image = models.ImageField(
         'Изображение блюда',
         upload_to='recipes_img/',
+        null=True,
     )
     text = models.TextField(
         verbose_name='Описание блюда',
@@ -128,7 +129,7 @@ class IngredientAmount(models.Model):
         related_name='ingredient',
         on_delete=models.CASCADE,
     )
-    ingredients = models.ForeignKey(
+    ingredient = models.ForeignKey(
         Ingredient,
         verbose_name='Связанные ингредиенты',
         related_name='recipe',

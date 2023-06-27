@@ -23,7 +23,7 @@ class IngredientAdmin(admin.ModelAdmin):
 class IngredientAmountAdmin(admin.ModelAdmin):
     list_display = (
         'recipe',
-        'ingredients',
+        'ingredient',
         'amount',
     )
     search_fields = (
