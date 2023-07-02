@@ -11,12 +11,14 @@ from .serializers import (
     ReadRecipeSerializer,
     RecipeSerializer,
     FavoriteRecipeSerializer,
+    UserSerializer
 )
 from recipes.models import (
     Tag,
     Ingredient,
     Recipe,
     FavoriteRecipe,
+    User
 )
 
 

@@ -98,6 +98,18 @@ class ReadRecipeSerializer(serializers.ModelSerializer):
         ]
 
 
+class MinRecipeSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Recipe
+        fields = [
+            'id',
+            'name',
+            'image',
+            'cooking_time'
+        ]
+
+
 class FavoriteRecipeSerializer(serializers.ModelSerializer):
 
     class Meta:
@@ -113,3 +125,10 @@ class FavoriteRecipeSerializer(serializers.ModelSerializer):
                 message='Рецепт уже добавлен в избранное!'
             )
         ]
+
+    def to_representation(self, instance):
+        request = self.context.get('request')
+        return MinRecipeSerializer(
+            instance.recipe,
+            context={'request': request}
+        ).data
