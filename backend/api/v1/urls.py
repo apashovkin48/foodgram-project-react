@@ -19,6 +19,11 @@ router.register(
     views.RecipeViewSet,
     basename='recipes'
 )
+router.register(
+    r"users",
+    views.CustomUserViewSet,
+    basename="users"
+)
 
 
 urlpatterns = [

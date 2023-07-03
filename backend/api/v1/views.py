@@ -1,6 +1,8 @@
 from django.shortcuts import get_object_or_404
+from djoser.views import UserViewSet
 from rest_framework.decorators import action
 from rest_framework.response import Response
+from rest_framework.pagination import PageNumberPagination
 from rest_framework import (
     viewsets,
     status,
@@ -11,7 +13,7 @@ from .serializers import (
     ReadRecipeSerializer,
     RecipeSerializer,
     FavoriteRecipeSerializer,
-    UserSerializer
+    FollowingAuthorSerializer,
 )
 from recipes.models import (
     Tag,
@@ -20,6 +22,35 @@ from recipes.models import (
     FavoriteRecipe,
     User
 )
+
+
+class CustomUserViewSet(UserViewSet):
+
+    queryset = User.objects.all()
+    pagination_class = PageNumberPagination
+
+    @action(detail=True, methods=['post', 'delete'])
+    def subscribe(self, request, id):
+        author = get_object_or_404(User, id=id)
+        print(author)
+        if request.method == 'POST':
+            serializer = FollowingAuthorSerializer(
+                data={'user': request.user.id, 'author': author.id, },
+                context={'request': request}
+            )
+            serializer.is_valid(raise_exception=True)
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+
+        if request.method == 'DELETE':
+            FavoriteRecipe.objects.filter(
+                user=request.user, author=author
+            ).delete()
+            return Response(status=status.HTTP_204_NO_CONTENT)
+
+    @action(detail=False, methods=['get'])
+    def subscriptions(self, request):
+        pass
 
 
 class TagViewSet(viewsets.ReadOnlyModelViewSet):

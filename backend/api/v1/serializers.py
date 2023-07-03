@@ -7,6 +7,7 @@ from recipes.models import (
     Recipe,
     FavoriteRecipe,
 )
+from users.models import FollowingAuthor
 from django.contrib.auth import get_user_model
 
 
@@ -15,15 +16,19 @@ User = get_user_model()
 
 class UserSerializer(serializers.ModelSerializer):
 
+    is_subscribed = serializers.SerializerMethodField()
+
     class Meta:
         model = User
-        fields = [
-            'id',
-            'email',
-            'username',
-            'first_name',
-            'last_name'
-        ]
+        fields = ('email', 'id', 'username', 'first_name',
+                  'last_name', 'is_subscribed')
+
+    def get_is_subscribed(self, obj):
+        request = self.context.get('request')
+        return (request.user.is_authenticated
+                and FollowingAuthor.objects.filter(
+                    user=request.user, author=obj
+                ).exists())
 
 
 class TagSerializer(serializers.ModelSerializer):
@@ -132,3 +137,10 @@ class FavoriteRecipeSerializer(serializers.ModelSerializer):
             instance.recipe,
             context={'request': request}
         ).data
+
+
+class FollowingAuthorSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = FollowingAuthor
+        fields = ['user', 'author']
