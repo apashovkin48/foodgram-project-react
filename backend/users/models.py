@@ -21,7 +21,6 @@ class User(AbstractUser):
     )
     first_name = models.CharField(
         max_length=150,
-        unique=True,
         validators=[
             RegexValidator(
                 regex=r'^[\w.@+-]+\Z',
@@ -34,7 +33,6 @@ class User(AbstractUser):
     )
     last_name = models.CharField(
         max_length=150,
-        unique=True,
         validators=[
             RegexValidator(
                 regex=r'^[\w.@+-]+\Z',
