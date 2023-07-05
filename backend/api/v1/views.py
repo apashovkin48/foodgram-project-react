@@ -14,6 +14,7 @@ from .serializers import (
     RecipeSerializer,
     FavoriteRecipeSerializer,
     FollowingAuthorSerializer,
+    ReprFollowingAuthorSerializer,
 )
 from recipes.models import (
     Tag,
@@ -21,6 +22,9 @@ from recipes.models import (
     Recipe,
     FavoriteRecipe,
     User
+)
+from users.models import (
+    FollowingAuthor,
 )
 
 
@@ -32,7 +36,6 @@ class CustomUserViewSet(UserViewSet):
     @action(detail=True, methods=['post', 'delete'])
     def subscribe(self, request, id):
         author = get_object_or_404(User, id=id)
-        print(author)
         if request.method == 'POST':
             serializer = FollowingAuthorSerializer(
                 data={'user': request.user.id, 'author': author.id, },
@@ -43,14 +46,18 @@ class CustomUserViewSet(UserViewSet):
             return Response(serializer.data, status=status.HTTP_201_CREATED)
 
         if request.method == 'DELETE':
-            FavoriteRecipe.objects.filter(
+            FollowingAuthor.objects.filter(
                 user=request.user, author=author
             ).delete()
             return Response(status=status.HTTP_204_NO_CONTENT)
 
     @action(detail=False, methods=['get'])
     def subscriptions(self, request):
-        pass
+        data = User.objects.filter(following__user=self.request.user)
+        serializer = ReprFollowingAuthorSerializer(data, many=True)
+        return self.get_paginated_response(
+            self.paginate_queryset(serializer.data)
+        )
 
 
 class TagViewSet(viewsets.ReadOnlyModelViewSet):

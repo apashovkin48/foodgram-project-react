@@ -2,7 +2,7 @@
 @user_me = http://127.0.0.1:8000/api/users/me/
 @user = http://127.0.0.1:8000/api/users/3/
 @user_subscribe = http://127.0.0.1:8000/api/users/3/subscribe/
-@user_subscription = http://127.0.0.1:8000/api/users/subscription/
+@user_subscription = http://127.0.0.1:8000/api/users/subscriptions/
 @get_token = http://127.0.0.1:8000/api/auth/token/login/
 @remove_token = http://127.0.0.1:8000/api/auth/token/logout/
 @tags = http://127.0.0.1:8000/api/tags/
