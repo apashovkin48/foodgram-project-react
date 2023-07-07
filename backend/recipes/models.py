@@ -190,7 +190,7 @@ class FavoriteRecipe(models.Model):
 
 class BasketRecipe(models.Model):
     user = models.ForeignKey(
-        verbose_name="Владелец списка",
+        verbose_name="Пользователь",
         related_name="carts",
         to=User,
         on_delete=models.CASCADE,

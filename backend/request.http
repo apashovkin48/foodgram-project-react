@@ -12,6 +12,8 @@
 @recipes = http://127.0.0.1:8000/api/recipes/
 @recipe = http://127.0.0.1:8000/api/recipes/1/
 @favorite = http://127.0.0.1:8000/api/recipes/1/favorite/
+@shopping_cart = http://127.0.0.1:8000/api/recipes/1/shopping_cart/
+@download_shopping_cart = http://127.0.0.1:8000/api/recipes/download_shopping_cart/
 
 
 ###
@@ -138,5 +140,20 @@ Authorization: Token 9d64e4c58e6da90a9adb729eb3a241a3c13f83be
 
 ###
 DELETE {{favorite}} HTTP/1.1
+Content-Type: application/json
+Authorization: Token 9d64e4c58e6da90a9adb729eb3a241a3c13f83be
+
+###
+POST {{shopping_cart}} HTTP/1.1
+Content-Type: application/json
+Authorization: Token 9d64e4c58e6da90a9adb729eb3a241a3c13f83be
+
+###
+DELETE {{shopping_cart}} HTTP/1.1
+Content-Type: application/json
+Authorization: Token 9d64e4c58e6da90a9adb729eb3a241a3c13f83be
+
+###
+GET {{download_shopping_cart}} HTTP/1.1
 Content-Type: application/json
 Authorization: Token 9d64e4c58e6da90a9adb729eb3a241a3c13f83be

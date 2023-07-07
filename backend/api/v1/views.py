@@ -1,4 +1,6 @@
 from django.shortcuts import get_object_or_404
+from django.db.models import Sum
+from django.http import FileResponse
 from djoser.views import UserViewSet
 from rest_framework.decorators import action
 from rest_framework.response import Response
@@ -8,6 +10,7 @@ from rest_framework import (
     status,
 )
 from .serializers import (
+    BasketRecipeSerializer,
     TagSerializer,
     IngredientSerializer,
     ReadRecipeSerializer,
@@ -17,11 +20,13 @@ from .serializers import (
     ReprFollowingAuthorSerializer,
 )
 from recipes.models import (
+    BasketRecipe,
     Tag,
     Ingredient,
     Recipe,
     FavoriteRecipe,
-    User
+    User,
+    IngredientAmount,
 )
 from users.models import (
     FollowingAuthor,
@@ -100,3 +105,47 @@ class RecipeViewSet(viewsets.ModelViewSet):
                 user=request.user, recipe=recipe
             ).delete()
             return Response(status=status.HTTP_204_NO_CONTENT)
+
+    @action(detail=True, methods=['post', 'delete'])
+    def shopping_cart(self, request, pk):
+        recipe = get_object_or_404(Recipe, id=pk)
+        if request.method == 'POST':
+            serializer = BasketRecipeSerializer(
+                data={'user': request.user.id, 'recipe': recipe.id, },
+                context={'request': request}
+            )
+            serializer.is_valid(raise_exception=True)
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+
+        if request.method == 'DELETE':
+            BasketRecipe.objects.filter(
+                user=request.user, recipe=recipe
+            ).delete()
+            return Response(status=status.HTTP_204_NO_CONTENT)
+
+    @action(detail=False, methods=['GET'])
+    def download_shopping_cart(self, request):
+        basket_recipes = BasketRecipe.objects.filter(user=request.user)
+
+        ingredients = IngredientAmount.objects.filter(
+            recipe__carts__user=request.user
+        ).values(
+            'ingredient__name', 'ingredient__measurement_unit'
+        ).annotate(ingredient_amount=Sum('amount'))
+        shopping = ['Меню для приготовления:\n\n']
+        for rcp in basket_recipes:
+            shopping.append(f'{rcp.recipe.name}\n')
+        shopping.append('\n-------------------------------------\n\n')
+        shopping.append('Список покупок:\n\n')
+        for ingredient in ingredients:
+            shopping.append(
+                f'{ingredient["ingredient__name"]} - '
+                f'{ingredient["ingredient__measurement_unit"]}, '
+                f'{ingredient["ingredient_amount"]}\n'
+            )
+        return FileResponse(
+            shopping,
+            as_attachment=True,
+            filename='Список_Покупок.pdf'
+        )

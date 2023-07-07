@@ -1,6 +1,7 @@
 from rest_framework.validators import UniqueTogetherValidator
 from rest_framework import serializers
 from recipes.models import (
+    BasketRecipe,
     Tag,
     Ingredient,
     IngredientAmount,
@@ -157,6 +158,7 @@ class ReadRecipeSerializer(serializers.ModelSerializer):
     author = UserSerializer(read_only=True)
     ingredients = serializers.SerializerMethodField()
     is_favorited = serializers.SerializerMethodField()
+    is_in_shopping_cart = serializers.SerializerMethodField()
 
     class Meta:
         model = Recipe
@@ -166,6 +168,7 @@ class ReadRecipeSerializer(serializers.ModelSerializer):
             'author',
             'ingredients',
             'is_favorited',
+            'is_in_shopping_cart',
             'name',
             'image',
             'text',
@@ -177,6 +180,14 @@ class ReadRecipeSerializer(serializers.ModelSerializer):
         if not request.user.is_authenticated:
             return False
         return FavoriteRecipe.objects.filter(
+            user=request.user, recipe=obj
+        ).exists()
+
+    def get_is_in_shopping_cart(self, obj):
+        request = self.context.get('request')
+        if not request.user.is_authenticated:
+            return False
+        return BasketRecipe.objects.filter(
             user=request.user, recipe=obj
         ).exists()
 
@@ -295,5 +306,19 @@ class FollowingAuthorSerializer(serializers.ModelSerializer):
         request = self.context.get('request')
         return ReprFollowingAuthorSerializer(
             instance.author,
+            context={'request': request}
+        ).data
+
+
+class BasketRecipeSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = BasketRecipe
+        fields = ['user', 'recipe']
+
+    def to_representation(self, instance):
+        request = self.context.get('request')
+        return MinRecipeSerializer(
+            instance.recipe,
             context={'request': request}
         ).data
