@@ -1,7 +1,8 @@
 from django.contrib.auth import get_user_model
 from django.shortcuts import get_object_or_404
 from rest_framework import status
-from rest_framework.test import APITestCase
+from rest_framework.test import APITestCase, APIClient
+from rest_framework.authtoken.models import Token
 from recipes.models import (
     Tag,
     Ingredient,
@@ -142,7 +143,9 @@ class ApiTest(APITestCase):
             format='json'
         )
         self.assertEquals(
-            response_create_token.status_code, status.HTTP_200_OK #HTTP_201_CREATED
+            response_create_token.status_code,
+            status.HTTP_200_OK
+            # HTTP_201_CREATED
         )
 
         token = f'Token {response_create_token.json()["auth_token"]}'
@@ -254,3 +257,33 @@ class ApiTest(APITestCase):
             format='json'
         )
         self.assertEquals(response.status_code, status.HTTP_400_BAD_REQUEST)
+
+    def test_recipes(self):
+        user = User.objects.get(username='ya')
+        auth_client = APIClient()
+        auth_client.force_authenticate(user=user)
+
+        # create recipe
+        request_create_recipe = auth_client.post(
+            '/api/recipes/',
+            {
+                "tags": [1],
+                "ingredients": [1],
+                "name": "apitest",
+                "image": None,
+                "text": "apitest",
+                "cooking_time": 10
+            },
+            format='json'
+        )
+        self.assertEquals(
+            request_create_recipe.status_code, status.HTTP_201_CREATED
+        )
+
+        # get recipes
+        request_recipes = auth_client.get(
+            '/api/recipes/',
+            format='json'
+        )
+        print(request_recipes.json())
+        

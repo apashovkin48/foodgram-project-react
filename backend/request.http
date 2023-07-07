@@ -105,7 +105,16 @@ Authorization: Token 9d64e4c58e6da90a9adb729eb3a241a3c13f83be
 
 {
   "tags": [1],
-  "ingredients": [1],
+  "ingredients": [
+    {
+      "id": 1,
+      "amount": 2
+    },
+    {
+      "id": 2,
+      "amount": 3
+    }
+  ],
   "name": "apitest",
   "image": null,
   "text": "apitest",

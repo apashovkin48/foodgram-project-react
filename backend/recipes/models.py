@@ -68,6 +68,7 @@ class Recipe(models.Model):
         verbose_name='Название блюда',
         help_text='Укажите название блюда',
         max_length=200,
+        null=False
     )
     author = models.ForeignKey(
         User,
@@ -104,6 +105,7 @@ class Recipe(models.Model):
     text = models.TextField(
         verbose_name='Описание блюда',
         help_text='Укажите описание блюда',
+        null=True
     )
     cooking_time = models.PositiveSmallIntegerField(
         verbose_name='Время приготовления',
@@ -114,7 +116,7 @@ class Recipe(models.Model):
     )
 
     def __str__(self):
-        return self.name
+        return f'{self.id} - {self.name}'
 
     class Meta:
         verbose_name = 'Рецепт'
@@ -126,13 +128,13 @@ class IngredientAmount(models.Model):
     recipe = models.ForeignKey(
         Recipe,
         verbose_name='В каких рецептах',
-        related_name='ingredient',
+        related_name='ingredientamounts',
         on_delete=models.CASCADE,
     )
     ingredient = models.ForeignKey(
         Ingredient,
         verbose_name='Связанные ингредиенты',
-        related_name='recipe',
+        related_name='ingredientamounts',
         on_delete=models.CASCADE,
     )
     amount = models.PositiveSmallIntegerField(
@@ -149,7 +151,7 @@ class IngredientAmount(models.Model):
         ordering = ['recipe']
 
     def __str__(self) -> str:
-        return f'{self.ingredients} - {self.amount}'
+        return f'{self.recipe} - {self.ingredient} - {self.amount}'
 
 
 class FavoriteRecipe(models.Model):
@@ -165,7 +167,7 @@ class FavoriteRecipe(models.Model):
         Recipe,
         verbose_name='Репецт',
         help_text='Укажите понравившейся рецепт',
-        related_name='in_favorites',
+        related_name='favorites',
         on_delete=models.CASCADE,
     )
 
@@ -195,7 +197,7 @@ class BasketRecipe(models.Model):
     )
     recipe = models.ForeignKey(
         verbose_name="Рецепты в списке покупок",
-        related_name="in_carts",
+        related_name="carts",
         to=Recipe,
         on_delete=models.CASCADE,
     )
