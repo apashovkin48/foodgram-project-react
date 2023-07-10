@@ -1,12 +1,14 @@
-from django.db import models
 from django.contrib.auth import get_user_model
 from django.core.validators import RegexValidator, MinValueValidator
+from django.db import models
 
 
 User = get_user_model()
 
 
 class Ingredient(models.Model):
+    """БД Модель для хранения возможных ингредиентов."""
+
     name = models.CharField(
         max_length=200,
         verbose_name='Ингредиент',
@@ -28,6 +30,8 @@ class Ingredient(models.Model):
 
 
 class Tag(models.Model):
+    """БД Модель для хранения возможных тегов."""
+
     name = models.CharField(
         max_length=200,
         verbose_name='Название тега',
@@ -64,6 +68,8 @@ class Tag(models.Model):
 
 
 class Recipe(models.Model):
+    """БД Модель для хранения рецептов авторов."""
+
     name = models.CharField(
         verbose_name='Название блюда',
         help_text='Укажите название блюда',
@@ -125,6 +131,8 @@ class Recipe(models.Model):
 
 
 class IngredientAmount(models.Model):
+    """БД Модель для хранения возможных ингредиентов."""
+
     recipe = models.ForeignKey(
         Recipe,
         verbose_name='В каких рецептах',
@@ -155,6 +163,8 @@ class IngredientAmount(models.Model):
 
 
 class FavoriteRecipe(models.Model):
+    """БД Модель для избранных рецептов."""
+
     user = models.ForeignKey(
         User,
         verbose_name='Пользователь',
@@ -189,6 +199,8 @@ class FavoriteRecipe(models.Model):
 
 
 class BasketRecipe(models.Model):
+    """БД Модель для списка покупок пользователя."""
+
     user = models.ForeignKey(
         verbose_name="Пользователь",
         related_name="carts",

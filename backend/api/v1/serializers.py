@@ -1,5 +1,8 @@
-from rest_framework.validators import UniqueTogetherValidator
+from django.contrib.auth import get_user_model
+from django.db.transaction import atomic
 from rest_framework import serializers
+from rest_framework.validators import UniqueTogetherValidator
+
 from recipes.models import (
     BasketRecipe,
     Tag,
@@ -9,14 +12,15 @@ from recipes.models import (
     FavoriteRecipe,
 )
 from users.models import FollowingAuthor
-from django.contrib.auth import get_user_model
-from django.db.transaction import atomic
 
 
 User = get_user_model()
 
 
 class UserSerializer(serializers.ModelSerializer):
+    """
+        Serializer для управления пользователями.
+    """
 
     is_subscribed = serializers.SerializerMethodField()
 
@@ -42,6 +46,9 @@ class UserSerializer(serializers.ModelSerializer):
 
 
 class TagSerializer(serializers.ModelSerializer):
+    """
+        Serializer для тегов.
+    """
 
     class Meta:
         model = Tag
@@ -54,6 +61,9 @@ class TagSerializer(serializers.ModelSerializer):
 
 
 class IngredientSerializer(serializers.ModelSerializer):
+    """
+        Serializer для ингредиентов.
+    """
 
     class Meta:
         model = Ingredient
@@ -65,6 +75,9 @@ class IngredientSerializer(serializers.ModelSerializer):
 
 
 class IngredientAmountSerializer(serializers.ModelSerializer):
+    """
+        Serializer для ингредиентов и их содержание в рецепте.
+    """
 
     id = serializers.IntegerField(source='ingredient.id', read_only=True)
     name = serializers.CharField(source='ingredient.name', read_only=True)
@@ -92,6 +105,9 @@ class CreateIngredientAmountSerializer(serializers.ModelSerializer):
 
 
 class RecipeSerializer(serializers.ModelSerializer):
+    """
+        Serializer для создания/изменения кулинарных рецептов.
+    """
 
     ingredients = CreateIngredientAmountSerializer(many=True)
 
@@ -153,6 +169,9 @@ class RecipeSerializer(serializers.ModelSerializer):
 
 
 class ReadRecipeSerializer(serializers.ModelSerializer):
+    """
+        Serializer для получения полной информации о рецепте.
+    """
 
     tags = TagSerializer(many=True)
     author = UserSerializer(read_only=True)
@@ -197,6 +216,9 @@ class ReadRecipeSerializer(serializers.ModelSerializer):
 
 
 class MinRecipeSerializer(serializers.ModelSerializer):
+    """
+        Serializer для получения краткой информации о рецепте.
+    """
 
     class Meta:
         model = Recipe
@@ -209,6 +231,9 @@ class MinRecipeSerializer(serializers.ModelSerializer):
 
 
 class FavoriteRecipeSerializer(serializers.ModelSerializer):
+    """
+        Serializer для добавления избранных рецептов.
+    """
 
     class Meta:
         model = FavoriteRecipe
@@ -233,6 +258,9 @@ class FavoriteRecipeSerializer(serializers.ModelSerializer):
 
 
 class ReprFollowingAuthorSerializer(UserSerializer):
+    """
+        Serializer для получения списка избранных авторов и их рецептов.
+    """
 
     is_subscribed = serializers.SerializerMethodField()
     recipes = serializers.SerializerMethodField()
@@ -290,6 +318,9 @@ class ReprFollowingAuthorSerializer(UserSerializer):
 
 
 class FollowingAuthorSerializer(serializers.ModelSerializer):
+    """
+        Serializer для подписки на авторов рецептов.
+    """
 
     class Meta:
         model = FollowingAuthor
@@ -319,6 +350,9 @@ class FollowingAuthorSerializer(serializers.ModelSerializer):
 
 
 class BasketRecipeSerializer(serializers.ModelSerializer):
+    """
+        Serializer для добавления добавления рецептов в список покупок.
+    """
 
     class Meta:
         model = BasketRecipe

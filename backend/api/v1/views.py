@@ -1,40 +1,40 @@
-from django.shortcuts import get_object_or_404
 from django.db.models import Sum
 from django.http import FileResponse
+from django.shortcuts import get_object_or_404
 from djoser.views import UserViewSet
-from rest_framework.decorators import action
-from rest_framework import filters
-from rest_framework.response import Response
-from rest_framework.permissions import AllowAny
-from rest_framework.pagination import PageNumberPagination
 from rest_framework import (
-    viewsets,
+    filters,
     status,
+    viewsets,
+)
+from rest_framework.decorators import action
+from rest_framework.pagination import PageNumberPagination
+from rest_framework.permissions import AllowAny
+from rest_framework.response import Response
+
+from recipes.models import (
+    BasketRecipe,
+    FavoriteRecipe,
+    Ingredient,
+    IngredientAmount,
+    Recipe,
+    Tag,
+    User,
 )
 from users.models import (
     FollowingAuthor,
 )
+from .permissions import IsAdminAuthorOrReadOnly
 from .serializers import (
     BasketRecipeSerializer,
-    TagSerializer,
+    FavoriteRecipeSerializer,
+    FollowingAuthorSerializer,
     IngredientSerializer,
     ReadRecipeSerializer,
     RecipeSerializer,
-    FavoriteRecipeSerializer,
-    FollowingAuthorSerializer,
     ReprFollowingAuthorSerializer,
+    TagSerializer,
 )
-from recipes.models import (
-    BasketRecipe,
-    Tag,
-    Ingredient,
-    Recipe,
-    FavoriteRecipe,
-    User,
-    IngredientAmount,
-)
-
-from .permissions import IsAdminAuthorOrReadOnly
 
 
 class CustomUserViewSet(UserViewSet):
