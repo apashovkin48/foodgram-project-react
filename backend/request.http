@@ -1,7 +1,7 @@
 @users = http://127.0.0.1:8000/api/users/
 @user_me = http://127.0.0.1:8000/api/users/me/
 @user = http://127.0.0.1:8000/api/users/3/
-@user_subscribe = http://127.0.0.1:8000/api/users/3/subscribe/
+@user_subscribe = http://127.0.0.1:8000/api/users/2/subscribe/
 @user_subscription = http://127.0.0.1:8000/api/users/subscriptions/
 @get_token = http://127.0.0.1:8000/api/auth/token/login/
 @remove_token = http://127.0.0.1:8000/api/auth/token/logout/
@@ -10,9 +10,9 @@
 @ingredients = http://127.0.0.1:8000/api/ingredients/
 @ingredient = http://127.0.0.1:8000/api/ingredients/1/
 @recipes = http://127.0.0.1:8000/api/recipes/
-@recipe = http://127.0.0.1:8000/api/recipes/1/
-@favorite = http://127.0.0.1:8000/api/recipes/1/favorite/
-@shopping_cart = http://127.0.0.1:8000/api/recipes/1/shopping_cart/
+@recipe = http://127.0.0.1:8000/api/recipes/2/
+@favorite = http://127.0.0.1:8000/api/recipes/2/favorite/
+@shopping_cart = http://127.0.0.1:8000/api/recipes/2/shopping_cart/
 @download_shopping_cart = http://127.0.0.1:8000/api/recipes/download_shopping_cart/
 
 
@@ -65,7 +65,16 @@ Authorization: Token 9d64e4c58e6da90a9adb729eb3a241a3c13f83be
 ###
 POST {{user_subscribe}} HTTP/1.1
 Content-Type: application/json
-Authorization: Token 9d64e4c58e6da90a9adb729eb3a241a3c13f83be
+Authorization: Token e74fb769c85d88f92103c09737c43f6c082813c6
+
+{
+  
+}
+
+###
+DELETE {{user_subscribe}} HTTP/1.1
+Content-Type: application/json
+Authorization: Token e74fb769c85d88f92103c09737c43f6c082813c6
 
 {
   
@@ -74,7 +83,7 @@ Authorization: Token 9d64e4c58e6da90a9adb729eb3a241a3c13f83be
 ###
 GET {{ user_subscription }} HTTP/1.1
 content-type: application/json
-Authorization: Token 9d64e4c58e6da90a9adb729eb3a241a3c13f83be
+Authorization: Token e74fb769c85d88f92103c09737c43f6c082813c6
 
 ###
 GET {{tag}} HTTP/1.1
@@ -129,6 +138,51 @@ Authorization: Token 9d64e4c58e6da90a9adb729eb3a241a3c13f83be
 }
 
 ###
+PATCH {{recipe}} HTTP/1.1
+Content-Type: application/json
+Authorization: Token 9d64e4c58e6da90a9adb729eb3a241a3c13f83be
+
+{
+  "tags": [1],
+  "ingredients": [
+    {
+      "id": 1,
+      "amount": 2
+    },
+    {
+      "id": 2,
+      "amount": 3
+    }
+  ],
+  "image": null,
+  "text": "apitest",
+  "cooking_time": 10
+}
+
+###
+PATCH {{recipe}} HTTP/1.1
+Content-Type: application/json
+Authorization: Token e74fb769c85d88f92103c09737c43f6c082813c6
+
+{
+  "tags": [1],
+  "ingredients": [
+    {
+      "id": 1,
+      "amount": 2
+    },
+    {
+      "id": 2,
+      "amount": 3
+    }
+  ],
+  "name": "apitest",
+  "image": null,
+  "text": "apitest",
+  "cooking_time": 10
+}
+
+###
 DELETE {{recipe}} HTTP/1.1
 Content-Type: application/json
 Authorization: Token 9d64e4c58e6da90a9adb729eb3a241a3c13f83be
@@ -136,12 +190,12 @@ Authorization: Token 9d64e4c58e6da90a9adb729eb3a241a3c13f83be
 ###
 POST {{favorite}} HTTP/1.1
 Content-Type: application/json
-Authorization: Token 9d64e4c58e6da90a9adb729eb3a241a3c13f83be 
+Authorization: Token e74fb769c85d88f92103c09737c43f6c082813c6 
 
 ###
 DELETE {{favorite}} HTTP/1.1
 Content-Type: application/json
-Authorization: Token 9d64e4c58e6da90a9adb729eb3a241a3c13f83be
+Authorization: Token e74fb769c85d88f92103c09737c43f6c082813c6
 
 ###
 POST {{shopping_cart}} HTTP/1.1

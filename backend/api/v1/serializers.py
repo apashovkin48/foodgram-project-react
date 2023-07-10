@@ -302,6 +302,14 @@ class FollowingAuthorSerializer(serializers.ModelSerializer):
             )
         ]
 
+    def validate(self, data):
+        request = self.context.get('request')
+        if request.user == data['author']:
+            raise serializers.ValidationError(
+                'Нельзя подписываться на самого себя!',
+            )
+        return data
+
     def to_representation(self, instance):
         request = self.context.get('request')
         return ReprFollowingAuthorSerializer(
@@ -315,6 +323,13 @@ class BasketRecipeSerializer(serializers.ModelSerializer):
     class Meta:
         model = BasketRecipe
         fields = ['user', 'recipe']
+        validators = [
+            UniqueTogetherValidator(
+                queryset=BasketRecipe.objects.all(),
+                fields=('user', 'recipe'),
+                message='Данный рецепт уже в списке покупок!'
+            )
+        ]
 
     def to_representation(self, instance):
         request = self.context.get('request')
