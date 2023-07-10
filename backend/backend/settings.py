@@ -1,3 +1,4 @@
+import os
 from datetime import timedelta
 from pathlib import Path
 
@@ -9,13 +10,16 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/3.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-*38wja_7t3gw$j7=wnld^!3^d-cbnu2_9*dgvp*ei(udd22n^k'
+SECRET_KEY = os.getenv('SECRET_KEY', 'qwe123')
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
-
+ALLOWED_HOSTS = [
+    os.getenv('DNS_NAME', 'kittykitty.hopto.org'),
+    os.getenv('LOCALHOST_IP', '127.0.0.1'),
+    os.getenv('LOCALHOST', 'localhost')
+]
 
 # Application definition
 
@@ -140,10 +144,10 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/3.2/howto/static-files/
 
 STATIC_URL = '/static/'
-STATICFILES_DIRS = ((BASE_DIR / 'static/'),)
+STATIC_ROOT = os.path.join(BASE_DIR, 'collected_static')
 
 MEDIA_URL = '/media/'
-MEDIA_ROOT = BASE_DIR / 'media'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 AUTH_USER_MODEL = 'users.User'
 
