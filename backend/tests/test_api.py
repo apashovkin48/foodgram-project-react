@@ -1,8 +1,6 @@
 from django.contrib.auth import get_user_model
-from django.shortcuts import get_object_or_404
 from rest_framework import status
-from rest_framework.test import APITestCase, APIClient
-from rest_framework.authtoken.models import Token
+from rest_framework.test import APITestCase
 from recipes.models import (
     Tag,
     Ingredient,
