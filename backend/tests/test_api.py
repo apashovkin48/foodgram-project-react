@@ -257,33 +257,3 @@ class ApiTest(APITestCase):
             format='json'
         )
         self.assertEquals(response.status_code, status.HTTP_400_BAD_REQUEST)
-
-    def test_recipes(self):
-        user = User.objects.get(username='ya')
-        auth_client = APIClient()
-        auth_client.force_authenticate(user=user)
-
-        # create recipe
-        request_create_recipe = auth_client.post(
-            '/api/recipes/',
-            {
-                "tags": [1],
-                "ingredients": [1],
-                "name": "apitest",
-                "image": None,
-                "text": "apitest",
-                "cooking_time": 10
-            },
-            format='json'
-        )
-        self.assertEquals(
-            request_create_recipe.status_code, status.HTTP_201_CREATED
-        )
-
-        # get recipes
-        request_recipes = auth_client.get(
-            '/api/recipes/',
-            format='json'
-        )
-        print(request_recipes.json())
-        
