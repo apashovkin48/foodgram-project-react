@@ -1,0 +1,32 @@
+[
+    {
+        "name": "Завтрак",
+        "color": "#E26C2D",
+        "slug": "breakfast"
+    },
+    {
+        "name": "Утренний перекус",
+        "color": "#DC143C",
+        "slug": "morningsnack"
+    },
+    {
+        "name": "Обед",
+        "color": "#2F4F4F",
+        "slug": "lunch"
+    },
+    {
+        "name": "Дневной перекус",
+        "color": "#800080",
+        "slug": "afternoonsnack"
+    },
+    {
+        "name": "Ужин",
+        "color": "#FFD700",
+        "slug": "dinner"
+    },
+    {
+        "name": "Ночной ЖОР",
+        "color": "#191970",
+        "slug": "nightzhor"
+    }
+]

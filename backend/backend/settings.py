@@ -15,7 +15,7 @@ SECRET_KEY = os.getenv('SECRET_KEY', 'qwe123')
 DEBUG = True
 
 ALLOWED_HOSTS = [
-    os.getenv('DNS_NAME', 'kittykitty.hopto.org'),
+    os.getenv('DNS_NAME', 'fooodgrammm.hopto.org'),
     os.getenv('LOCALHOST_IP', '127.0.0.1'),
     os.getenv('LOCALHOST', 'localhost')
 ]
@@ -32,6 +32,7 @@ INSTALLED_APPS = [
     'rest_framework.authtoken',
     'rest_framework',
     'djoser',
+    'django_filters',
     'users.apps.UsersConfig',
     'recipes.apps.RecipesConfig',
     'core.apps.CoreConfig',
@@ -72,14 +73,15 @@ WSGI_APPLICATION = 'backend.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
 
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.sqlite3',
-#         'NAME': BASE_DIR / 'db.sqlite3',
-#     }
-# }
 
 DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': BASE_DIR / 'db.sqlite3',
+    }
+}
+
+QWE = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
         'NAME': os.getenv('POSTGRES_DB', 'django'),

@@ -9,6 +9,7 @@ def load_table_from_json(table, file_name):
         encoding='utf-8'
     )
     json_data = json.load(file)
+    table.objects.all().delete()
     for jd in json_data:
         t = table(**jd)
         t.save()

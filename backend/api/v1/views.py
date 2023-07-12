@@ -1,9 +1,9 @@
 from django.db.models import Sum
 from django.http import FileResponse
 from django.shortcuts import get_object_or_404
+from django_filters.rest_framework import DjangoFilterBackend
 from djoser.views import UserViewSet
 from rest_framework import (
-    filters,
     status,
     viewsets,
 )
@@ -23,6 +23,10 @@ from recipes.models import (
 )
 from users.models import (
     FollowingAuthor,
+)
+from .filters import (
+    IngredientFilter,
+    RecipeFilter,
 )
 from .permissions import IsAdminAuthorOrReadOnly
 from .serializers import (
@@ -123,8 +127,8 @@ class IngredientViewSet(viewsets.ReadOnlyModelViewSet):
     serializer_class = IngredientSerializer
     permission_classes = (AllowAny, )
     pagination_class = None
-    filter_backends = [filters.SearchFilter]
-    search_fields = ['name']
+    filter_backends = [DjangoFilterBackend]
+    filterset_class = IngredientFilter
 
 
 class RecipeViewSet(viewsets.ModelViewSet):
@@ -133,6 +137,8 @@ class RecipeViewSet(viewsets.ModelViewSet):
     queryset = Recipe.objects.all()
     permission_classes = [IsAdminAuthorOrReadOnly]
     http_method_names = ['get', 'post', 'patch', 'delete']
+    filter_backends = [DjangoFilterBackend]
+    filterset_class = RecipeFilter
 
     def get_serializer_class(self):
         if self.action in ('retrieve', 'list'):
