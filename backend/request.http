@@ -12,8 +12,8 @@
 @recipes = http://127.0.0.1:8000/api/recipes/
 @filter_recipes = http://127.0.0.1:8000/api/recipes/?tags=breakfast
 @recipe = http://127.0.0.1:8000/api/recipes/2/
-@favorite = http://127.0.0.1:8000/api/recipes/2/favorite/
-@shopping_cart = http://127.0.0.1:8000/api/recipes/2/shopping_cart/
+@favorite = http://127.0.0.1:8000/api/recipes/1/favorite/
+@shopping_cart = http://127.0.0.1:8000/api/recipes/1/shopping_cart/
 @download_shopping_cart = http://127.0.0.1:8000/api/recipes/download_shopping_cart/
 
 
@@ -194,22 +194,22 @@ Authorization: Token 9d64e4c58e6da90a9adb729eb3a241a3c13f83be
 ###
 POST {{favorite}} HTTP/1.1
 Content-Type: application/json
-Authorization: Token e74fb769c85d88f92103c09737c43f6c082813c6 
+Authorization: Token f97588615ecf53506d0fda1a258a9b937a180592 
 
 ###
 DELETE {{favorite}} HTTP/1.1
 Content-Type: application/json
-Authorization: Token e74fb769c85d88f92103c09737c43f6c082813c6
+Authorization: Token f97588615ecf53506d0fda1a258a9b937a180592
 
 ###
 POST {{shopping_cart}} HTTP/1.1
 Content-Type: application/json
-Authorization: Token 9d64e4c58e6da90a9adb729eb3a241a3c13f83be
+Authorization: Token f97588615ecf53506d0fda1a258a9b937a180592
 
 ###
 DELETE {{shopping_cart}} HTTP/1.1
 Content-Type: application/json
-Authorization: Token 9d64e4c58e6da90a9adb729eb3a241a3c13f83be
+Authorization: Token f97588615ecf53506d0fda1a258a9b937a180592
 
 ###
 GET {{download_shopping_cart}} HTTP/1.1

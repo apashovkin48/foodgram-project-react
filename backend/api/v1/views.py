@@ -28,6 +28,7 @@ from .filters import (
     IngredientFilter,
     RecipeFilter,
 )
+from .mixins import CreateDestroyObjMixinRecipe
 from .permissions import IsAdminAuthorOrReadOnly
 from .serializers import (
     BasketRecipeSerializer,
@@ -70,20 +71,19 @@ class CustomUserViewSet(UserViewSet):
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
 
-        if request.method == 'DELETE':
-            if not FollowingAuthor.objects.filter(
-                user=request.user, author=author
-            ).exists():
-                return Response(
-                    {
-                        "detail": "Вы не подписаны на данного автора."
-                    },
-                    status=status.HTTP_400_BAD_REQUEST
-                )
-            FollowingAuthor.objects.filter(
-                user=request.user, author=author
-            ).delete()
-            return Response(status=status.HTTP_204_NO_CONTENT)
+        if not FollowingAuthor.objects.filter(
+            user=request.user, author=author
+        ).exists():
+            return Response(
+                {
+                    "detail": "Вы не подписаны на данного автора."
+                },
+                status=status.HTTP_400_BAD_REQUEST
+            )
+        FollowingAuthor.objects.filter(
+            user=request.user, author=author
+        ).delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
 
     @action(detail=False, methods=['get'])
     def subscriptions(self, request):
@@ -131,7 +131,10 @@ class IngredientViewSet(viewsets.ReadOnlyModelViewSet):
     filterset_class = IngredientFilter
 
 
-class RecipeViewSet(viewsets.ModelViewSet):
+class RecipeViewSet(
+    viewsets.ModelViewSet,
+    CreateDestroyObjMixinRecipe
+):
     """ViewSet для работы с кулинарными рецептами."""
 
     queryset = Recipe.objects.all()
@@ -150,61 +153,18 @@ class RecipeViewSet(viewsets.ModelViewSet):
         """
             Добавляет(POST) / Удалет(DELETE) избранные рецепты.
         """
-        recipe = get_object_or_404(Recipe, pk=pk)
         if request.method == 'POST':
-            serializer = FavoriteRecipeSerializer(
-                data={'user': request.user.id, 'recipe': recipe.id, },
-                context={'request': request}
-            )
-            serializer.is_valid(raise_exception=True)
-            serializer.save()
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
-
-        if request.method == 'DELETE':
-            if not FavoriteRecipe.objects.filter(
-                user=request.user, recipe=recipe
-            ).exists():
-                return Response(
-                    {
-                        "error": "Данный рецепт не является избранным!"
-                    },
-                    status=status.HTTP_400_BAD_REQUEST
-                )
-            FavoriteRecipe.objects.filter(
-                user=request.user, recipe=recipe
-            ).delete()
-            return Response(status=status.HTTP_204_NO_CONTENT)
+            return self.mixin_create(request, FavoriteRecipeSerializer, pk)
+        return self.mixin_destroy(request, FavoriteRecipe, pk)
 
     @action(detail=True, methods=['post', 'delete'])
     def shopping_cart(self, request, pk):
         """
             Добавляет(POST) / Удалет(DELETE) рецепты в карзину покупок.
         """
-
-        recipe = get_object_or_404(Recipe, pk=pk)
         if request.method == 'POST':
-            serializer = BasketRecipeSerializer(
-                data={'user': request.user.id, 'recipe': recipe.id, },
-                context={'request': request}
-            )
-            serializer.is_valid(raise_exception=True)
-            serializer.save()
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
-
-        if request.method == 'DELETE':
-            if not BasketRecipe.objects.filter(
-                user=request.user, recipe=recipe
-            ).exists():
-                return Response(
-                    {
-                        "error": "Данного рецепта нет в корзине!"
-                    },
-                    status=status.HTTP_400_BAD_REQUEST
-                )
-            BasketRecipe.objects.filter(
-                user=request.user, recipe=recipe
-            ).delete()
-            return Response(status=status.HTTP_204_NO_CONTENT)
+            return self.mixin_create(request, BasketRecipeSerializer, pk)
+        return self.mixin_destroy(request, BasketRecipe, pk)
 
     @action(detail=False, methods=['GET'])
     def download_shopping_cart(self, request):

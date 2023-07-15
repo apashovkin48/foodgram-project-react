@@ -20,13 +20,13 @@ class Ingredient(models.Model):
         help_text='Укажите единицы измерения',
     )
 
-    def __str__(self):
-        return self.name
-
     class Meta:
         verbose_name = 'Ингредиент'
         verbose_name_plural = 'Ингредиенты'
         ordering = ['id']
+
+    def __str__(self):
+        return self.name
 
 
 class Tag(models.Model):
@@ -43,7 +43,7 @@ class Tag(models.Model):
         verbose_name='Цвет тега',
         help_text='Укажите цвет тега'
     )
-    slug = models.CharField(
+    slug = models.SlugField(
         max_length=200,
         null=True,
         verbose_name='Слуг',
@@ -58,13 +58,13 @@ class Tag(models.Model):
         ]
     )
 
-    def __str__(self):
-        return self.name
-
     class Meta:
         verbose_name = 'Тег'
         verbose_name_plural = 'Теги'
         ordering = ['name']
+
+    def __str__(self):
+        return self.name
 
 
 class Recipe(models.Model):
@@ -121,13 +121,13 @@ class Recipe(models.Model):
         ),
     )
 
-    def __str__(self):
-        return f'{self.id} - {self.name}'
-
     class Meta:
         verbose_name = 'Рецепт'
         verbose_name_plural = 'Рецепты'
         ordering = ['-pub_date']
+
+    def __str__(self):
+        return f'{self.id} - {self.name}'
 
 
 class IngredientAmount(models.Model):
