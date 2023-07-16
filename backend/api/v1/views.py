@@ -1,5 +1,5 @@
 from django.db.models import Sum
-from django.http import FileResponse
+from django.http.response import HttpResponse
 from django.shortcuts import get_object_or_404
 from django_filters.rest_framework import DjangoFilterBackend
 from djoser.views import UserViewSet
@@ -171,6 +171,10 @@ class RecipeViewSet(
         """
             Выгрузка PDF файла со списком покупок.
         """
+        user = self.request.user
+        if not user.carts.exists():
+            return Response(status=status.HTTP_400_BAD_REQUEST)
+
         basket_recipes = BasketRecipe.objects.filter(user=request.user)
         ingredients = IngredientAmount.objects.filter(
             recipe__carts__user=request.user
@@ -188,8 +192,10 @@ class RecipeViewSet(
                 f'{ingredient["ingredient__measurement_unit"]}, '
                 f'{ingredient["ingredient_amount"]}\n'
             )
-        return FileResponse(
-            shopping,
-            as_attachment=True,
-            filename='Список_Покупок.pdf'
+
+        filename = "shopping_list.txt"
+        response = HttpResponse(
+            shopping, content_type="text.txt; charset=utf-8"
         )
+        response["Content-Disposition"] = f"attachment; filename={filename}"
+        return response
